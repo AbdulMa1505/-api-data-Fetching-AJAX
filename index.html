@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX External API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #btn {
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        #btn:hover {
+            background-color: #0056b3;
+        }
+
+        .users {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin: 10px auto;
+            width: 80%;
+            max-width: 500px;
+            transition: transform 0.2s;
+        }
+
+        .users:hover {
+            transform: translateY(-5px);
+        }
+
+        .users img {
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+
+        .users ul {
+            text-align: left;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .users ul li {
+            margin: 5px 0;
+        }
+
+        .users a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .users a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <button id="btn">Load GitHub Users</button><br><br>
+    <h1>GitHub Users</h1>
+    <div id="users"></div>
+    <script>
+        document.getElementById('btn').addEventListener('click', loadUsers);
+
+        function loadUsers() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'https://api.github.com/users', true);
+            xhr.onload = function () {
+                if (this.status == 200) {
+                    var users = JSON.parse(this.responseText);
+                    var output = '';
+                    users.forEach(user => {
+                        output +=
+                            `<div class="users">
+                                <img src="${user.avatar_url}" width="70" height="70">
+                                <ul>
+                                    <li><strong>ID:</strong> ${user.id}</li>
+                                    <li><strong>Name:</strong> ${user.login}</li>
+                                    <li><a href="${user.html_url}" target="_blank">github profile</a></li>
+                                </ul>
+                            </div>`;
+                    });
+                    document.getElementById('users').innerHTML = output;
+                }
+            };
+            xhr.send();
+        }
+    </script>
+</body>
+</html>
